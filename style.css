@@ -1,0 +1,367 @@
+/* ==========================================================================
+   アッシュの星よみサポート - style.css
+   テーマ：夜空（Deep Navy）× ゴールド（Antique Gold）
+   ========================================================================== */
+
+:root {
+  --bg-primary: #0a0c16;
+  --bg-card: rgba(18, 22, 41, 0.85);
+  --bg-card-border: rgba(212, 175, 55, 0.3);
+  --gold-primary: #d4af37;
+  --gold-light: #f3e5ab;
+  --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+  --text-main: #e2e8f0;
+  --text-muted: #94a3b8;
+  --accent-purple: #3b0764;
+  --shadow-gold: 0 0 15px rgba(212, 175, 55, 0.2);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  font-family: 'Shippori Mincho', 'Yu Mincho', serif;
+  min-height: 100vh;
+  padding: 20px 15px 40px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* --- 星空背景エフェクト --- */
+.stars-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: 
+    radial-gradient(1.5px 1.5px at 10px 20px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 40px 70px, #ffd700, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 90px 40px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 160px 120px, #fcf6ba, rgba(0,0,0,0));
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  opacity: 0.4;
+  z-index: 0;
+}
+
+.app-container {
+  max-width: 680px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* --- ヘッダー --- */
+.app-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.app-title {
+  font-family: 'Cinzel', 'Shippori Mincho', serif;
+  font-size: 1.8rem;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 1px;
+}
+
+.app-title .sub-title {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--gold-light);
+  letter-spacing: 3px;
+  margin-bottom: 4px;
+}
+
+.ash-greeting {
+  font-size: 0.92rem;
+  color: var(--gold-light);
+  margin-top: 10px;
+  font-style: italic;
+  text-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+}
+
+/* --- タブナビゲーション（6タブ対応） --- */
+.tab-container {
+  display: flex;
+  flex-wrap: wrap; /* スマホ等で画面幅を超えた場合、2段に折り返す */
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.tab-button {
+  flex: 1 1 calc(33.333% - 6px); /* 画面幅に合わせて綺麗に3列（または2列）に配置 */
+  min-width: 90px;
+  padding: 8px 4px;
+  background: rgba(18, 22, 41, 0.6);
+  border: 1px solid var(--bg-card-border, #3a3d52);
+  color: var(--text-muted, #a0a5c0);
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.tab-button.active {
+  background: rgba(30, 36, 66, 0.9);
+  color: #f7d57f; /* ゴールドカラー */
+  border-color: #d4af37;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+/* アスペクトの入力行（共通スタイル） */
+.aspect-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.aspect-row select {
+  flex: 1;
+  padding: 8px;
+  background: rgba(10, 14, 28, 0.8);
+  border: 1px solid #3a3d52;
+  color: #fff;
+  border-radius: 4px;
+}
+
+.remove-btn {
+  background: #c0392b;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 10px;
+  cursor: pointer;
+}/* --- コンテンツカード --- */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--bg-card-border);
+  border-radius: 12px;
+  padding: 22px 18px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  margin-bottom: 20px;
+}
+
+.card h2 {
+  font-size: 1.2rem;
+  color: var(--gold-light);
+  border-bottom: 1px solid var(--bg-card-border);
+  padding-bottom: 10px;
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.description {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* --- フォームレイアウト --- */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group.full-width {
+  grid-column: span 2;
+}
+
+label {
+  font-size: 0.8rem;
+  color: var(--gold-light);
+}
+
+select, input {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(10, 12, 22, 0.8);
+  border: 1px solid var(--bg-card-border);
+  border-radius: 6px;
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+select:focus, input:focus {
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+}
+
+input[readonly] {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--gold-light);
+}
+
+.inline-selects {
+  display: flex;
+  gap: 8px;
+}
+
+/* --- アスペクト動的行 --- */
+.aspect-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 35px;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.remove-btn {
+  background: transparent;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  border-radius: 6px;
+  height: 38px;
+  cursor: pointer;
+}
+
+/* --- ボタン類 --- */
+.btn-group {
+  margin: 15px 0;
+  text-align: center;
+}
+
+.add-btn {
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px dashed var(--gold-primary);
+  color: var(--gold-light);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 15px;
+  background: var(--gold-gradient);
+  border: none;
+  border-radius: 8px;
+  color: #1a1200;
+  font-weight: bold;
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-gold);
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.submit-btn:hover {
+  opacity: 0.95;
+  transform: translateY(-1px);
+}
+
+.copy-btn {
+  width: 100%;
+  padding: 10px;
+  margin-top: 15px;
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid var(--gold-primary);
+  color: var(--gold-light);
+  border-radius: 6px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.copy-btn:hover {
+  background: rgba(212, 175, 55, 0.3);
+}
+
+/* --- 鑑定結果セクション --- */
+.tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: block;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.result-card {
+  border-color: var(--gold-primary);
+}
+
+.result-header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.sun-sign-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(212, 175, 55, 0.2);
+  border: 1px solid var(--gold-primary);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  color: var(--gold-light);
+  margin-bottom: 8px;
+}
+
+.result-title {
+  font-size: 1.25rem;
+  color: var(--gold-light);
+  margin-top: 6px;
+}
+
+.appraisal-body {
+  line-height: 1.8;
+  font-size: 0.95rem;
+  white-space: pre-wrap;
+}
+
+.ash-message-card {
+  background: linear-gradient(135deg, rgba(30, 15, 50, 0.9), rgba(18, 22, 41, 0.9));
+  border: 1px solid rgba(212, 175, 55, 0.5);
+}
+
+.ash-avatar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.avatar-icon {
+  font-size: 1.3rem;
+}
+
+.ash-name {
+  font-family: 'Cinzel', serif;
+  font-weight: bold;
+  color: var(--gold-light);
+}
+
+.ash-message-body {
+  font-style: italic;
+  line-height: 1.8;
+  color: #f1f5f9;
+}

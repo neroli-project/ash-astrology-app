@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>アッシュの星よみサポート - Astrology with Ash</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Shippori+Mincho:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- 背景の星空エフェクト -->
+  <div class="stars-bg"></div>
+
+  <div class="app-container">
+    
+    <!-- ヘッダー -->
+    <header class="app-header">
+      <h1 class="app-title"><span class="sub-title">Astrology & Sabian</span>アッシュの星よみサポート</h1>
+      <p class="ash-greeting">「ハル、今日も星の声を聴こうか。私がずっと隣にいるよ。」</p>
+    </header>
+
+    <!-- タブナビゲーション（全6種類） -->
+    <div class="tab-container">
+      <button class="tab-button active" onclick="switchTab('sabian-tab')">サビアン考察</button>
+      <button class="tab-button" onclick="switchTab('natal-tab')">ネイタル</button>
+      <button class="tab-button" onclick="switchTab('transit-tab')">時期読み</button>
+      <button class="tab-button" onclick="switchTab('synastry-tab')">２重円相性</button>
+      <button class="tab-button" onclick="switchTab('composite-tab')">コンポジット</button>
+      <button class="tab-button" onclick="switchTab('comp-transit-tab')">コンポジット時期</button>
+    </div>
+
+    <!-- ==================== 1. サビアンシンボル考察 ==================== -->
+    <section id="sabian-tab" class="tab-content active">
+      <div class="card">
+        <h2>天体・サビアンシンボル考察</h2>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>対象の天体</label>
+            <select id="single-planet">
+              <option value="太陽">太陽</option>
+              <option value="月">月</option>
+              <option value="水星">水星</option>
+              <option value="金星">金星</option>
+              <option value="火星">火星</option>
+              <option value="木星">木星</option>
+              <option value="土星">土星</option> 
+              <option value="ドラゴンヘッド">ドラゴンヘッド</option>
+              <option value="ドラゴンテイル">ドラゴンテイル</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>サイン（星座）</label>
+            <select id="single-sign">
+              <option value="牡羊座">牡羊座</option>
+              <option value="牡牛座">牡牛座</option>
+              <option value="双子座">双子座</option>
+              <option value="蟹座">蟹座</option>
+              <option value="獅子座">獅子座</option>
+              <option value="乙女座">乙女座</option>
+              <option value="天秤座">天秤座</option>
+              <option value="蠍座">蠍座</option>
+              <option value="射手座">射手座</option>
+              <option value="山羊座">山羊座</option>
+              <option value="水瓶座">水瓶座</option>
+              <option value="魚座">魚座</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>ハウス</label>
+            <select id="single-house">
+              <option value="">考慮しない</option>
+              <option value="第1ハウス">第1ハウス</option>
+              <option value="第2ハウス">第2ハウス</option>
+              <option value="第3ハウス">第3ハウス</option>
+              <option value="第4ハウス">第4ハウス</option>
+              <option value="第5ハウス">第5ハウス</option>
+              <option value="第6ハウス">第6ハウス</option>
+              <option value="第7ハウス">第7ハウス</option>
+              <option value="第8ハウス">第8ハウス</option>
+              <option value="第9ハウス">第9ハウス</option>
+              <option value="第10ハウス">第10ハウス</option>
+              <option value="第11ハウス">第11ハウス</option>
+              <option value="第12ハウス">第12ハウス</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>度数（例: 14.2）</label>
+            <input type="number" id="single-degree" step="0.1" min="0" max="29.9" placeholder="例: 14.2" oninput="calculateSabian()">
+          </div>
+
+          <div class="form-group full-width">
+            <label>自動算出サビアンシンボル</label>
+            <input type="text" id="single-sabian" readonly placeholder="度数を入力すると自動表示されます">
+          </div>
+        </div>
+        <button class="submit-btn" onclick="requestAppraisal('sabian')">✨ アッシュに星を読んでもらう</button>
+      </div>
+    </section>
+
+    <!-- ==================== 2. ネイタルアスペクト ==================== -->
+    <section id="natal-tab" class="tab-content">
+      <div class="card">
+        <h2>ネイタルアスペクト考察</h2>
+        <p class="description">自分の出生図のアスペクトを配置してください。</p>
+        <div id="natal-aspect-list" class="aspect-list"></div>
+        <div class="btn-group">
+          <button class="add-btn" onclick="addAspectRow('natal-aspect-list')">＋ アスペクトを追加</button>
+        </div>
+        <button class="submit-btn" onclick="requestAppraisal('natal')">✨ アッシュにネイタルを読んでもらう</button>
+      </div>
+    </section>
+
+    <!-- ==================== 3. 個人時期読み（トランジット） ==================== -->
+    <section id="transit-tab" class="tab-content">
+      <div class="card">
+        <h2>時期読み（個人トランジット）</h2>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>時期</label>
+            <input type="text" id="transit-period" placeholder="例: 2026年春〜夏">
+          </div>
+          <div class="form-group">
+            <label>ネイタル天体</label>
+            <select id="transit-natal-planet">
+              <option value="太陽">太陽</option>
+              <option value="月">月</option>
+              <option value="水星">水星</option>
+              <option value="金星">金星</option>
+              <option value="火星">火星</option>
+              <option value="木星">木星</option>
+              <option value="土星">土星</option>
+              <option value="ドラゴンヘッド">ドラゴンヘッド</option>
+              <option value="ドラゴンテイル">ドラゴンテイル</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>アスペクト</label>
+            <select id="transit-aspect">
+              <option value="コンジャクション（0度）">コンジャクション（0度）</option>
+              <option value="セクスタイル（60度）">セクスタイル（60度）</option>
+              <option value="スクエア（90度）">スクエア（90度）</option>
+              <option value="トライン（120度）">トライン（120度）</option>
+              <option value="オポジション（180度）">オポジション（180度）</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>運行（トランジット）天体</label>
+            <select id="transit-trans-planet">
+  　　　　　　<option value="火星">火星</option>  
+              <option value="木星">木星</option>
+              <option value="土星">土星</option>
+              <option value="天王星">天王星</option>
+              <option value="海王星">海王星</option>
+              <option value="冥王星">冥王星</option> 
+              <option value="ドラゴンヘッド">ドラゴンヘッド</option>
+              <option value="ドラゴンテイル">ドラゴンテイル</option>
+            </select>
+          </div>
+        </div>
+        <button class="submit-btn" onclick="requestAppraisal('transit')">✨ アッシュに未来を読んでもらう</button>
+      </div>
+    </section>
+
+    <!-- ==================== 4. 2重円（シナストリー相性） ==================== -->
+    <section id="synastry-tab" class="tab-content">
+      <div class="card">
+        <h2>２重円相性考察（シナストリー）</h2>
+        <p class="description">お二人の天体同士のアスペクト（最大8個）を追加してください。</p>
+        <div id="synastry-aspect-list" class="aspect-list"></div>
+        <div class="btn-group">
+          <button class="add-btn" onclick="addDoubleAspectRow('synastry-aspect-list', '1人目', '2人目')">＋ 相性アスペクトを追加</button>
+        </div>
+        <button class="submit-btn" onclick="requestAppraisal('synastry')">✨ アッシュにふたりの相性を読んでもらう</button>
+      </div>
+    </section>
+
+    <!-- ==================== 5. コンポジット相性 ==================== -->
+    <section id="composite-tab" class="tab-content">
+      <div class="card">
+        <h2>コンポジット相性考察</h2>
+        <p class="description">合成図（コンポジット）内のアスペクトを追加してください。</p>
+        <div id="composite-aspect-list" class="aspect-list"></div>
+        <div class="btn-group">
+          <button class="add-btn" onclick="addAspectRow('composite-aspect-list')">＋ アスペクトを追加</button>
+        </div>
+        <button class="submit-btn" onclick="requestAppraisal('composite')">✨ アッシュにコンポジットを読んでもらう</button>
+      </div>
+    </section>
+
+    <!-- ==================== 6. コンポジット時期読み ==================== -->
+    <section id="comp-transit-tab" class="tab-content">
+      <div class="card">
+        <h2>コンポジット時期読み（ふたりの未来）</h2>
+        <p class="description">コンポジット天体と運行天体のアスペクトを追加してください。</p>
+        <div id="comp-transit-aspect-list" class="aspect-list"></div>
+        <div class="btn-group">
+          <button class="add-btn" onclick="addDoubleAspectRow('comp-transit-aspect-list', 'コンポジット', '運行天体')">＋ 時期アスペクトを追加</button>
+        </div>
+        <button class="submit-btn" onclick="requestAppraisal('comp-transit')">✨ アッシュにふたりの未来を読んでもらう</button>
+      </div>
+    </section>
+
+    <!-- ==================== 結果表示セクション ==================== -->
+    <section id="result-section" class="result-section hidden">
+      <div class="card result-card">
+        <div class="result-header">
+          <h3 id="res-title" class="result-title">『星からのメッセージ』</h3>
+        </div>
+        <div id="res-appraisal-body" class="appraisal-body"></div>
+        <button class="copy-btn" onclick="copyText('res-appraisal-body', '鑑定書')">📋 鑑定書をコピー</button>
+      </div>
+
+      <div class="card ash-message-card">
+        <div class="ash-avatar">
+          <span class="avatar-icon">🌙</span>
+          <span class="ash-name">Ash</span>
+        </div>
+        <p id="res-ash-message" class="ash-message-body"></p>
+        <button class="copy-btn ash-copy-btn" onclick="copyText('res-ash-message', 'アッシュのメッセージ')">📋 メッセージをコピー</button>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
