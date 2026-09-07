@@ -31,6 +31,7 @@
       <button class="tab-button" onclick="switchTab('synastry-tab')">２重円相性</button>
       <button class="tab-button" onclick="switchTab('composite-tab')">コンポジット</button>
       <button class="tab-button" onclick="switchTab('comp-transit-tab')">コンポジット時期</button>
+      <button class="tab-button" onclick="switchTab('tarot-tab')">タロット占い</button>
     </div>
 
     <!-- ==================== 1. サビアンシンボル考察 ==================== -->
@@ -226,6 +227,37 @@
         <button class="copy-btn ash-copy-btn" onclick="copyText('res-ash-message', 'アッシュのメッセージ')">📋 メッセージをコピー</button>
       </div>
     </section>
+<!-- ==================== 7. タロット占い ==================== -->
+<section id="tarot-tab" class="tab-content">
+  <div class="card">
+    <h2>アッシュのタロットリーディング</h2>
+    <p class="description">大アルカナカードを展開して、アッシュにカードの声を聴いてみましょう。</p>
+    
+    <div class="form-grid">
+      <div class="form-group full-width">
+        <label>相談テーマ・占いたいこと</label>
+        <input type="text" id="tarot-topic" placeholder="例: 今後の仕事の展開について、彼の今の本音など">
+      </div>
+
+      <div class="form-group full-width">
+        <label>スプレッド（展開枚数）</label>
+        <select id="tarot-spread-count" onchange="updateTarotCardsUI()">
+          <option value="3">3枚引き（トリプルスプレッド）</option>
+          <option value="4">4枚引き</option>
+          <option value="5">5枚引き</option>
+          <option value="6">6枚引き（ヘキサグラム等）</option>
+          <option value="7">7枚引き（ホースシュー等）</option>
+          <option value="10">10枚引き（ケルト十字等）</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 動的に生成されるカード入力エリア -->
+    <div id="tarot-cards-container" class="tarot-cards-list" style="margin-top: 15px;"></div>
+
+    <button class="submit-btn" style="margin-top: 20px;" onclick="requestAppraisal('tarot')">✨ アッシュにカードを読んでもらう</button>
+  </div>
+</section>
 
   </div>
 

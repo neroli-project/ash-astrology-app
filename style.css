@@ -365,3 +365,10 @@ input[readonly] {
   line-height: 1.8;
   color: #f1f5f9;
 }
+
+/* タロットの3列指定をスマホで自動調整 */
+@media (max-width: 600px) {
+  .tarot-card-row .form-grid {
+    grid-template-columns: 1fr !important;
+  }
+}

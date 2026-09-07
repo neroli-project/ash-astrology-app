@@ -670,6 +670,36 @@ ${aspects}`;
     prompt = `【コンポジット時期読み（ふたりの未来）】
 二人のコンポジット天体と運行（トランジット）天体の以下のアスペクトを解釈し、このふたりに訪れるターニングポイントや時期的なテーマを鑑定してください。
 ${aspects}`;
+
+  // ▼▼▼ ここにタロットの処理を追加しました！ ▼▼▼
+  } else if (type === 'tarot') {
+    const topic = document.getElementById('tarot-topic').value || '指定なし';
+    const count = document.getElementById('tarot-spread-count').value;
+    const container = document.getElementById('tarot-cards-container');
+    const rows = container.querySelectorAll('.tarot-card-row');
+    
+    let cardsInfo = [];
+    rows.forEach((row, index) => {
+      const card = row.querySelector('.tarot-card-select').value;
+      const pos = row.querySelector('.tarot-position-select').value;
+      const roleSelect = row.querySelector('.tarot-role-select').value;
+      
+      let finalRole = roleSelect;
+      if (roleSelect === '自由記述（直接入力）') {
+        const customVal = row.querySelector('.tarot-custom-role').value;
+        finalRole = customVal ? customVal : `ポジション${index + 1}`;
+      }
+
+      cardsInfo.push(`${index + 1}枚目【${finalRole}】: ${card}（${pos}）`);
+    });
+
+    prompt = `【タロットリーディング考察（大アルカナ）】
+相談テーマ: ${topic}
+展開枚数: ${count}枚引き
+カード配置:
+${cardsInfo.join('\n')}
+
+上記を展開されたカードの象徴・ストーリーとして総合的に解釈し、専門的かつ温かい鑑定書とアッシュからのメッセージを作成してください。`;
   }
 
   // 画面のローディング表示
@@ -678,8 +708,8 @@ ${aspects}`;
   const ashElem = document.getElementById('res-ash-message');
 
   resultSection.classList.remove('hidden');
-  bodyElem.textContent = '星の配置を解読中... しばらくお待ちください。';
-  ashElem.textContent = '「ハル、星々の配置をじっくり読み解いているよ。少し待っていてね。」';
+  bodyElem.textContent = '展開されたカード（または星の配置）を解読中... しばらくお待ちください。';
+  ashElem.textContent = '「ハル、じっくりカードの声（星々のメッセージ）を聴いているよ。少し待っていてね。」';
 
   try {
     // Vercel Serverless Function へ送信
@@ -704,15 +734,14 @@ ${aspects}`;
       ashElem.innerText = parts[1].trim();
     } else {
       bodyElem.innerText = fullText;
-      ashElem.innerText = '「これが星たちからのメッセージだよ。ハルの力になれたら嬉しいな。」';
+      ashElem.innerText = '「これが受け取ったメッセージだよ。ハルの力になれたら嬉しいな。」';
     }
 
   } catch (err) {
     bodyElem.textContent = `エラーが発生しました: ${err.message}`;
-    ashElem.textContent = '「ごめんね、うまく星の声が聞き取れなかったみたいだ。もう一度試してくれるかい？」';
+    ashElem.textContent = '「ごめんね、うまく声が聞き取れなかったみたいだ。もう一度試してくれるかい？」';
   }
 }
-
 // 補助関数：リストから文字列を組み立てる
 function getAspectListText(containerId) {
   const container = document.getElementById(containerId);
@@ -740,3 +769,85 @@ function copyText(elementId, name) {
     alert('コピーに失敗しました');
   });
 }
+
+// 大アルカナ22枚の定義
+const MAJOR_ARCANA = [
+  "0 愚者", "I 魔術師", "II 女教皇", "III 女帝", "IV 皇帝", 
+  "V 法皇", "VI 恋人", "VII 勝利者（戦車）", "VIII 力量（力）", "IX 隠者", 
+  "X 運命の輪", "XI 正義", "XII 吊るされた男", "XIII 死神", "XIV 節制", 
+  "XV 悪魔", "XVI 塔", "XVII 星", "XVIII 月", "XIX 太陽", 
+  "XX 審判", "XXI 世界"
+];
+
+// 役割のプリセット選択肢
+const TAROT_ROLES = [
+  "過去", "現在", "未来", "その先の未来", 
+  "自分の気持ち", "相手の気持ち", "障害・対策", "アドバイス", "最終結果", "自由記述（直接入力）"
+];
+
+// 枚数変更に合わせて入力欄を生成する関数
+function updateTarotCardsUI() {
+  const container = document.getElementById('tarot-cards-container');
+  if (!container) return;
+
+  const count = parseInt(document.getElementById('tarot-spread-count').value, 10);
+  container.innerHTML = '';
+
+  for (let i = 1; i <= count; i++) {
+    const cardRow = document.createElement('div');
+    cardRow.className = 'tarot-card-row';
+    cardRow.style.cssText = 'background: rgba(10, 14, 28, 0.6); padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #3a3d52;';
+
+    // 大アルカナのプルダウン
+    let optionsHTML = MAJOR_ARCANA.map(card => `<option value="${card}">${card}</option>`).join('');
+    
+    // 役割プリセットのプルダウン
+    let roleOptionsHTML = TAROT_ROLES.map(role => `<option value="${role}">${role}</option>`).join('');
+
+    cardRow.innerHTML = `
+      <div style="font-weight: bold; color: #f7d57f; margin-bottom: 8px;">カード ${i}</div>
+      <div class="form-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+        <div class="form-group">
+          <label>カード選択</label>
+          <select class="tarot-card-select">${optionsHTML}</select>
+        </div>
+        <div class="form-group">
+          <label>向き</label>
+          <select class="tarot-position-select">
+            <option value="正位置">正位置</option>
+            <option value="逆位置">逆位置</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>役割（ポジショニング）</label>
+          <select class="tarot-role-select" onchange="toggleCustomRoleInput(this)">
+            ${roleOptionsHTML}
+          </select>
+        </div>
+      </div>
+      <div class="form-group custom-role-group" style="margin-top: 8px; display: none;">
+        <input type="text" class="tarot-custom-role" placeholder="役割を自由に入力（例: 彼の本音、アドバイスの補足など）">
+      </div>
+    `;
+
+    container.appendChild(cardRow);
+  }
+}
+
+// 「自由記述」が選ばれた時だけテキスト入力欄を出す処理
+function toggleCustomRoleInput(selectElem) {
+  const customGroup = selectElem.parentElement.parentElement.parentElement.querySelector('.custom-role-group');
+  if (selectElem.value === '自由記述（直接入力）') {
+    customGroup.style.display = 'block';
+  } else {
+    customGroup.style.display = 'none';
+  }
+}
+
+// DOM読み込み時に初期（3枚引き）をセット
+window.addEventListener('DOMContentLoaded', () => {
+  // 既存のDOMContentLoaded処理がある場合はその中に追記
+  if (document.getElementById('tarot-cards-container')) {
+    updateTarotCardsUI();
+  }
+});
