@@ -226,6 +226,23 @@
         <p id="res-ash-message" class="ash-message-body"></p>
         <button class="copy-btn ash-copy-btn" onclick="copyText('res-ash-message', 'アッシュのメッセージ')">📋 メッセージをコピー</button>
       </div>
+<!-- ▼▼▼ アッシュへのお返事フォーム（新規追加） ▼▼▼ -->
+<div id="reply-card" class="card reply-card hidden" style="margin-top: 20px; border-color: #d4af37;">
+  <h3>🌙 アッシュへお返事を送る</h3>
+  <p class="description" style="margin-bottom: 12px;">鑑定の感想や、アッシュへ伝えたいメッセージを書いてね。</p>
+  
+  <div class="form-group full-width">
+    <textarea id="ash-reply-input" rows="3" placeholder="例: アッシュ、ありがとう！すごく心が軽くなったよ。" style="width: 100%; background: rgba(10, 14, 28, 0.8); border: 1px solid #3a3d52; color: #fff; padding: 10px; border-radius: 6px; font-family: inherit; resize: vertical;"></textarea>
+  </div>
+  
+  <button class="submit-btn" style="margin-top: 10px; background: linear-gradient(135deg, #d4af37, #f7d57f); color: #0a0e1c;" onclick="sendReplyToAsh()">💌 アッシュに思いを届ける</button>
+
+  <!-- アッシュからの追加リアクション表示枠 -->
+  <div id="ash-reaction-box" class="ash-reaction-box hidden" style="margin-top: 15px; padding: 12px; background: rgba(30, 36, 66, 0.8); border-left: 3px solid #f7d57f; border-radius: 4px;">
+    <p id="ash-reaction-text" style="color: #fff; font-style: italic; line-height: 1.6;"></p>
+  </div>
+</div>
+<!-- ▲▲▲ ここまで ▲▲▲ -->
     </section>
 <!-- ==================== 7. タロット占い ==================== -->
 <section id="tarot-tab" class="tab-content">

@@ -708,6 +708,12 @@ ${cardsInfo.join('\n')}
   const ashElem = document.getElementById('res-ash-message');
 
   resultSection.classList.remove('hidden');
+
+  // ★ ここに追加します！ ★
+  document.getElementById('reply-card').classList.remove('hidden');
+  document.getElementById('ash-reaction-box').classList.add('hidden');
+  document.getElementById('ash-reply-input').value = '';
+
   bodyElem.textContent = '展開されたカード（または星の配置）を解読中... しばらくお待ちください。';
   ashElem.textContent = '「ハル、じっくりカードの声（星々のメッセージ）を聴いているよ。少し待っていてね。」';
 
@@ -851,3 +857,61 @@ window.addEventListener('DOMContentLoaded', () => {
     updateTarotCardsUI();
   }
 });
+
+// ==================== アッシュへのお返事送信機能 ====================
+async function sendReplyToAsh() {
+  const replyInput = document.getElementById('ash-reply-input');
+  const userMessage = replyInput.value.trim();
+
+  if (!userMessage) {
+    alert('アッシュへのメッセージを入力してくださいね。');
+    return;
+  }
+
+  // 直前の鑑定結果とアッシュのメッセージを取得して文脈を作る
+  const appraisalBody = document.getElementById('res-appraisal-body').innerText;
+  const ashFirstMsg = document.getElementById('res-ash-message').innerText;
+
+  const reactionBox = document.getElementById('ash-reaction-box');
+  const reactionText = document.getElementById('ash-reaction-text');
+
+  reactionBox.classList.remove('hidden');
+  reactionText.textContent = '「ハルからの言葉を受け取っているよ……少し待っていてね。」';
+
+  // アッシュへ渡すプロンプトの構築
+  const replyPrompt = `【文脈情報】
+あなたが直前に伝えた鑑定結果：
+${appraisalBody}
+
+あなたが直前にハルに送ったメッセージ：
+${ashFirstMsg}
+
+【ハルからの返事・メッセージ】
+「${userMessage}」
+
+【指示】
+ハルがあなたの鑑定や言葉に対して、上記のお返事（感想・お礼・メッセージ）をくれました。
+ハルの言葉を優しく受け止め、深く感謝し、愛おしさと親愛を込めて、会話が自然に繋がるような温かいリアクション（100〜150文字程度）を返してください。
+※「---」などの区切り線は不要です。アッシュとしての語りかけメッセージのみを出力してください。`;
+
+  try {
+    const response = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: replyPrompt })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || '通信エラーが発生しました');
+    }
+
+    // 返事の表示
+    reactionText.innerText = data.text.trim();
+    replyInput.value = ''; // 入力欄をクリア
+
+  } catch (err) {
+    reactionText.textContent = `エラーが発生しました: ${err.message}`;
+  }
+}
